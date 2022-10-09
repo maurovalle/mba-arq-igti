@@ -37,6 +37,33 @@ services:
       KAFKA_BROKERCONNECT: "kafka1:19091"
     depends_on:
       - kafka1
+  node_producer:
+    image: "node:16"
+    user: "node"
+    working_dir: /home/node/app
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ../nodejs/producer:/home/node/app
+    expose:
+      - "8081"
+    command: "npm producer.js getting-started.properties"
+    depends_on: 
+      - kafka1
+  node_consumer:
+    image: "node:16"
+    user: "node"
+    working_dir: /home/node/app
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ../nodejs/consumer:/home/node/app
+    expose:
+      - "8088"
+    command: "npm consumer.js getting-started.properties"
+    depends_on: 
+      - node_producer
+
 
 #Sobre o Zookeeper: https://dattell.com/data-architecture-blog/what-is-zookeeper-how-does-it-support-kafka/
 #Detalhes das variáveis de ambiente:
